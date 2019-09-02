@@ -2,6 +2,7 @@
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.zufar</groupId>
@@ -10,8 +11,20 @@
     <packaging>war</packaging>
 
     <name>Order Management System</name>
+    <developers>
+        <developer>
+            <name>Zufar Sunagatov</name>
+            <email>zufar.sunagatov@gmail.com</email>
+            <url>https://vk.com/person99</url>
+            <roles>
+                <role>architect</role>
+                <role>developer</role>
+                <role>tester</role>
+            </roles>
+            <timezone>Samara (UTC+4:00)</timezone>
+        </developer>
+    </developers>
 
-    <url>https://vk.com/person99</url>
 
     <properties>
         <!--                                               Maven properties                                          -->
@@ -33,7 +46,6 @@
     </properties>
 
     <dependencies>
-
         <!--                                         Spring framework dependencies                                   -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
