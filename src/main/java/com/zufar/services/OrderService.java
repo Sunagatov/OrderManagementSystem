@@ -1,5 +1,6 @@
 package com.zufar.services;
 
+import com.zufar.dto.OrderDTO;
 import com.zufar.exceptions.OrderNotFoundException;
 import com.zufar.models.Order;
 import com.zufar.repositories.OrderRepository;
@@ -33,9 +34,9 @@ public class OrderService {
     }
 
     public Collection<Order> getOrders() {
-        return (Collection<Order>)this.orderRepository.findAll();
+        return (Collection<Order>) this.orderRepository.findAll();
     }
-    
+
     public void deleteOrder(Long orderId) throws OrderNotFoundException {
         if (!this.orderRepository.existsById(orderId)) {
             final String errorMessage = "Deleting an order is impossible. The order with id=" + orderId + " is not found";
@@ -46,30 +47,58 @@ public class OrderService {
         this.orderRepository.deleteById(orderId);
     }
 
-    public Order saveOrder(Order order) {
-        if (order == null) {
-            final String errorMessage = "Saving an order is impossible. An order is absent.";
+    public OrderDTO saveOrder(OrderDTO orderDTO) {
+        if (orderDTO == null) {
+            final String errorMessage = "Saving an orderDTO is impossible. An orderDTO is absent.";
             IllegalArgumentException exception = new IllegalArgumentException(errorMessage);
             LOGGER.error(errorMessage, exception);
             throw exception;
         }
-        return this.orderRepository.save(order);
+        Order order = OrderService.convertToOrder(orderDTO);
+        order = this.orderRepository.save(order);
+        return OrderService.convertToOrderDTO(order);
     }
 
-    public Order updateOrder(Order order) throws OrderNotFoundException {
-        if (order == null || order.getId() == null) {
+    public OrderDTO updateOrder(OrderDTO orderDTO) throws OrderNotFoundException {
+        if (orderDTO == null || orderDTO.getId() == null) {
             final String errorMessage = "Updating an order is impossible. An orderId is absent.";
             IllegalArgumentException exception = new IllegalArgumentException(errorMessage);
             LOGGER.error(errorMessage, exception);
             throw exception;
         }
-        final Long orderId = order.getId();
+        final Long orderId = orderDTO.getId();
         if (!this.orderRepository.existsById(orderId)) {
             final String errorMessage = "Updating an order is impossible. The order with id=" + orderId + " is not found";
             OrderNotFoundException exception = new OrderNotFoundException(errorMessage);
             LOGGER.error(errorMessage, exception);
             throw exception;
         }
-        return this.orderRepository.save(order);
+        Order order = OrderService.convertToOrder(orderDTO);
+        order = this.orderRepository.save(order);
+        return OrderService.convertToOrderDTO(order);
+    }
+
+    private static Order convertToOrder(OrderDTO orderDTO) {
+        Order order = new Order();
+        order.setId(order.getId());
+        order.setTitle(order.getTitle());
+        order.setCustomer(order.getCustomer());
+        order.setStatus(order.getStatus());
+        order.setCreationDate(order.getCreationDate());
+        order.setLastModifiedDate(order.getLastModifiedDate());
+        order.setOrderItems(order.getOrderItems());
+        return order;
+    }
+
+    private static OrderDTO convertToOrderDTO(Order order) {
+        OrderDTO orderDTO = new OrderDTO();
+        orderDTO.setId(order.getId());
+        orderDTO.setTitle(order.getTitle());
+        orderDTO.setCustomer(order.getCustomer());
+        orderDTO.setStatus(order.getStatus());
+        orderDTO.setCreationDate(order.getCreationDate());
+        orderDTO.setLastModifiedDate(order.getLastModifiedDate());
+        orderDTO.setOrderItems(order.getOrderItems());
+        return orderDTO;
     }
 }
