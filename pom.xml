@@ -33,10 +33,10 @@
         <maven.compiler.target>1.7</maven.compiler.target>
 
         <!--                                           Spring framework properties                                   -->
-        <spring.framework.boot-starter-wer.version>2.1.7.RELEASE</spring.framework.boot-starter-wer.version>
+        <spring.framework.boot-starter.version>2.1.5.RELEASE</spring.framework.boot-starter.version>
 
         <!--                                              Database properties                                        -->
-        <postgressql.version>9.1-901-1.jdbc4</postgressql.version>
+        <postgressql.version>42.2.5</postgressql.version>
         <flywaydb.core.version>6.0.1</flywaydb.core.version>
         <!--                                              Testing properties                                         -->
         <junit.version>4.12</junit.version>
@@ -50,38 +50,30 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
-            <version>${spring.framework.boot-starter-wer.version}</version>
+            <version>${spring.framework.boot-starter.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-tomcat</artifactId>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.hibernate</groupId>
-                    <artifactId>hibernate-core</artifactId>
-                </exclusion>
-            </exclusions>
+            <version>${spring.framework.boot-starter.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
+            <version>${spring.framework.boot-starter.version}</version>
         </dependency>
 
         <!--                                             Database dependencies                                       -->
         <dependency>
-            <groupId>postgresql</groupId>
+            <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>${postgressql.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.flywaydb</groupId>
-            <artifactId>flyway-core</artifactId>
-            <version>${flywaydb.core.version}</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+            <version>${spring.framework.boot-starter.version}</version>
         </dependency>
 
         <!--                                             Testing dependencies                                        -->
@@ -89,6 +81,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+            <version>${spring.framework.boot-starter.version}</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -124,6 +117,10 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>8</source>
+                    <target>8</target>
+                </configuration>
             </plugin>
         </plugins>
     </build>
