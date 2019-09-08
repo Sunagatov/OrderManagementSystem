@@ -11,6 +11,7 @@
     <packaging>war</packaging>
 
     <name>Order Management System</name>
+    
     <developers>
         <developer>
             <name>Zufar Sunagatov</name>
