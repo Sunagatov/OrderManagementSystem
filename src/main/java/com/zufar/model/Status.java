@@ -1,13 +1,14 @@
-package com.zufar.models;
+package com.zufar.model;
 
 import javax.persistence.*;
 
 @Entity
-@Table(name = "products")
-public class Product {
+@Table(name = "statuses")
+public class Status {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "status_sequence")
+    @SequenceGenerator(name = "status_sequence", sequenceName = "status_seq")
     private Long id;
 
     @Column(name = "name", length = 256)
@@ -31,7 +32,7 @@ public class Product {
 
     @Override
     public String toString() {
-        return "Product{" +
+        return "Status{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 '}';
@@ -43,9 +44,9 @@ public class Product {
             return true;
         if (obj == null)
             return false;
-        if (!(obj instanceof Product))
+        if (!(obj instanceof Status))
             return false;
-        Product other = (Product) obj;
+        Status other = (Status) obj;
         if (id == null) {
             if (other.id != null)
                 return false;

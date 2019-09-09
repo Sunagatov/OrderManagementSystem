@@ -1,4 +1,4 @@
-package com.zufar.models;
+package com.zufar.model;
 
 
 import org.hibernate.annotations.Fetch;
@@ -13,14 +13,15 @@ import java.util.Set;
 public class Order {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "order_sequence")
+    @SequenceGenerator(name = "order_sequence", sequenceName = "order_seq")
     private Long id;
 
     @Column(name = "title", length = 256)
     private String title;
 
-    @Column(name = "creation_date ")
-    private LocalDateTime creationDate ;
+    @Column(name = "creation_date")
+    private LocalDateTime creationDate;
 
     @Column(name = "last_modified_date")
     private LocalDateTime lastModifiedDate;

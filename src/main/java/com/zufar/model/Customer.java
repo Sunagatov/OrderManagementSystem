@@ -1,4 +1,4 @@
-package com.zufar.models;
+package com.zufar.model;
 
 import javax.persistence.*;
 
@@ -7,7 +7,8 @@ import javax.persistence.*;
 public class Customer {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "customer_sequence")
+    @SequenceGenerator(name = "customer_sequence", sequenceName = "customer_seq")
     private Long id;
 
     @Column(name = "name", length = 256)
