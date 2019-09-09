@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
-public class ProductService {
+public class ProductService implements DaoService<ProductDTO> {
 
     private static final Logger LOGGER = LogManager.getLogger(ProductService.class);
     private final ProductRepository productRepository;
@@ -25,14 +25,14 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public Collection<ProductDTO> getAllProducts() {
+    public Collection<ProductDTO> getAll() {
         return  ((Collection<Product>) this.productRepository.findAll())
                 .stream()
                 .map(ProductService::convertToProductDTO)
                 .collect(Collectors.toList());
     }
 
-    public ProductDTO getProduct(Long id) {
+    public ProductDTO getById(Long id) {
         Product productEntity = this.productRepository.findById(id).orElseThrow(() -> {
             final String errorMessage = "The product with id = " + id + " not found.";
             ProductNotFoundException productNotFoundException = new ProductNotFoundException(errorMessage);
@@ -42,31 +42,32 @@ public class ProductService {
         return ProductService.convertToProductDTO(productEntity);
     }
 
-    public ProductDTO saveProduct(ProductDTO product) {
+    public ProductDTO save(ProductDTO product) {
         Product productEntity = ProductService.convertToProduct(product);
         productEntity = this.productRepository.save(productEntity);
         return ProductService.convertToProductDTO(productEntity);
     }
 
-    public ProductDTO updateProduct(ProductDTO product) {
-        this.isProductExists(product.getId());
+    public ProductDTO update(ProductDTO product) {
+        this.isExists(product.getId());
         Product productEntity = ProductService.convertToProduct(product);
         productEntity = this.productRepository.save(productEntity);
         return ProductService.convertToProductDTO(productEntity);
     }
 
-    public void deleteProduct(Long id) {
-        this.isProductExists(id);
+    public void deleteById(Long id) {
+        this.isExists(id);
         this.productRepository.deleteById(id);
     }
 
-    private void isProductExists(Long id) {
+    public Boolean isExists(Long id) {
         if (!this.productRepository.existsById(id)) {
             final String errorMessage = "The product with id = " + id + " not found.";
             ProductNotFoundException productNotFoundException = new ProductNotFoundException(errorMessage);
             LOGGER.error(errorMessage, productNotFoundException);
             throw productNotFoundException;
         }
+        return true;
     }
 
     public static Product convertToProduct(ProductDTO product) {

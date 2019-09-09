@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
-public class OrderService {
+public class OrderService implements DaoService<OrderDTO> {
 
     private static final Logger LOGGER = LogManager.getLogger(OrderService.class);
     private OrderRepository orderRepository;
@@ -32,14 +32,14 @@ public class OrderService {
         this.orderRepository = orderRepository;
     }
 
-    public Collection<OrderDTO> getAllOrders() {
+    public Collection<OrderDTO> getAll() {
         return ((Collection<Order>) this.orderRepository.findAll())
                 .stream()
                 .map(OrderService::convertToOrderDTO)
                 .collect(Collectors.toList());
     }
 
-    public OrderDTO getOrder(Long id) {
+    public OrderDTO getById(Long id) {
         Order statusEntity = this.orderRepository.findById(id).orElseThrow(() -> {
             final String errorMessage = "Getting an order with id=" + id + " is impossible. There is no a sort attribute.";
             OrderNotFoundException orderNotFoundException = new OrderNotFoundException(errorMessage);
@@ -49,31 +49,32 @@ public class OrderService {
         return OrderService.convertToOrderDTO(statusEntity);
     }
 
-    public OrderDTO saveOrder(OrderDTO order) {
+    public OrderDTO save(OrderDTO order) {
         Order orderEntity = OrderService.convertToOrder(order);
         orderEntity = this.orderRepository.save(orderEntity);
         return OrderService.convertToOrderDTO(orderEntity);
     }
 
-    public OrderDTO updateOrder(OrderDTO status) {
-        this.isOrderExists(status.getId());
+    public OrderDTO update(OrderDTO status) {
+        this.isExists(status.getId());
         Order orderEntity = OrderService.convertToOrder(status);
         orderEntity = this.orderRepository.save(orderEntity);
         return OrderService.convertToOrderDTO(orderEntity);
     }
 
-    public void deleteOrder(Long id) {
-        this.isOrderExists(id);
+    public void deleteById(Long id) {
+        this.isExists(id);
         this.orderRepository.deleteById(id);
     }
 
-    private void isOrderExists(Long id) {
+    public Boolean isExists(Long id) {
         if (!this.orderRepository.existsById(id)) {
             final String errorMessage = "The order with id = " + id + " not found.";
             OrderNotFoundException orderNotFoundException = new OrderNotFoundException(errorMessage);
             LOGGER.error(errorMessage, orderNotFoundException);
             throw orderNotFoundException;
         }
+        return true;
     }
 
     public static OrderDTO convertToOrderDTO(Order order) {

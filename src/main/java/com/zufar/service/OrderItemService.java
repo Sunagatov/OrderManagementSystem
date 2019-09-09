@@ -2,14 +2,11 @@ package com.zufar.service;
 
 import com.zufar.dto.OrderItemDTO;
 import com.zufar.dto.ProductDTO;
-import com.zufar.exception.CustomerNotFoundException;
 import com.zufar.exception.OrderItemNotFoundException;
-import com.zufar.exception.ProductNotFoundException;
 import com.zufar.exception.StatusNotFoundException;
 import com.zufar.model.OrderItem;
 import com.zufar.model.Product;
 import com.zufar.repository.OrderItemRepository;
-import com.zufar.repository.ProductRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,27 +18,24 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
-public class OrderItemService {
+public class OrderItemService implements DaoService<OrderItemDTO> {
 
     private static final Logger LOGGER = LogManager.getLogger(OrderItemService.class);
     private final OrderItemRepository orderItemRepository;
-    private final ProductRepository productRepository;
 
     @Autowired
-    public OrderItemService(OrderItemRepository orderItemRepository,
-                            ProductRepository productRepository) {
+    public OrderItemService(OrderItemRepository orderItemRepository) {
         this.orderItemRepository = orderItemRepository;
-        this.productRepository = productRepository;
     }
 
-    public Collection<OrderItemDTO> getAllOrderItems() {
+    public Collection<OrderItemDTO> getAll() {
         return ((Collection<OrderItem>) this.orderItemRepository.findAll())
                 .stream()
                 .map(OrderItemService::convertToOrderItemDTO)
                 .collect(Collectors.toList());
     }
 
-    public OrderItemDTO getOrderItem(Long id) {
+    public OrderItemDTO getById(Long id) {
         OrderItem orderEntity = this.orderItemRepository.findById(id).orElseThrow(() -> {
             final String errorMessage = "The orderItem with id = " + id + " not found.";
             OrderItemNotFoundException orderItemNotFoundException = new OrderItemNotFoundException(errorMessage);
@@ -51,39 +45,32 @@ public class OrderItemService {
         return OrderItemService.convertToOrderItemDTO(orderEntity);
     }
 
-    public OrderItemDTO saveOrderItem(OrderItemDTO orderItem) {
-        OrderItem orderItemEntity = OrderItemService.convertToOrderItem(orderItem);
-//        final Long productId = orderItem.getProduct().getId();
-//        Product product = this.productRepository.findById(productId).orElseThrow(() -> {
-//            final String errorMessage = "The product with id = " + productId + " not found.";
-//            ProductNotFoundException productNotFoundException = new ProductNotFoundException(errorMessage);
-//            LOGGER.error(errorMessage, productNotFoundException);
-//            return productNotFoundException;
-//        });
-//        orderItemEntity.setProduct(product);
-        orderItemEntity = this.orderItemRepository.save(orderItemEntity);
-        return OrderItemService.convertToOrderItemDTO(orderItemEntity);
-    }
-
-    public OrderItemDTO updateOrderItem(OrderItemDTO orderItem) {
-        this.isOrderItemExists(orderItem.getId());
+    public OrderItemDTO save(OrderItemDTO orderItem) {
         OrderItem orderItemEntity = OrderItemService.convertToOrderItem(orderItem);
         orderItemEntity = this.orderItemRepository.save(orderItemEntity);
         return OrderItemService.convertToOrderItemDTO(orderItemEntity);
     }
 
-    public void deleteOrderItem(Long id) {
-        this.isOrderItemExists(id);
+    public OrderItemDTO update(OrderItemDTO orderItem) {
+        this.isExists(orderItem.getId());
+        OrderItem orderItemEntity = OrderItemService.convertToOrderItem(orderItem);
+        orderItemEntity = this.orderItemRepository.save(orderItemEntity);
+        return OrderItemService.convertToOrderItemDTO(orderItemEntity);
+    }
+
+    public void deleteById(Long id) {
+        this.isExists(id);
         this.orderItemRepository.deleteById(id);
     }
 
-    private void isOrderItemExists(Long id) {
+    public Boolean isExists(Long id) {
         if (!this.orderItemRepository.existsById(id)) {
             final String errorMessage = "The orderItem with id = " + id + " not found.";
             StatusNotFoundException statusNotFoundException = new StatusNotFoundException(errorMessage);
             LOGGER.error(errorMessage, statusNotFoundException);
             throw statusNotFoundException;
         }
+        return true;
     }
 
     public static OrderItemDTO convertToOrderItemDTO(OrderItem orderItem) {

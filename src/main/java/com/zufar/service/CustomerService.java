@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
-public class CustomerService {
+public class CustomerService implements DaoService<CustomerDTO> {
 
     private static final Logger LOGGER = LogManager.getLogger(CustomerService.class);
     private final CustomerRepository customerRepository;
@@ -25,14 +25,14 @@ public class CustomerService {
         this.customerRepository = customerRepository;
     }
 
-    public Collection<CustomerDTO> getAllCustomers() {
+    public Collection<CustomerDTO> getAll() {
         return ((Collection<Customer>) this.customerRepository.findAll())
                 .stream()
                 .map(CustomerService::convertToCustomerDTO)
                 .collect(Collectors.toList());
     }
 
-    public CustomerDTO getCustomer(Long id) {
+    public CustomerDTO getById(Long id) {
         Customer customerEntity = this.customerRepository.findById(id).orElseThrow(() -> {
             final String errorMessage = "The customer with id = " + id + " not found.";
             CustomerNotFoundException customerNotFoundException = new CustomerNotFoundException(errorMessage);
@@ -42,31 +42,32 @@ public class CustomerService {
         return CustomerService.convertToCustomerDTO(customerEntity);
     }
 
-    public CustomerDTO saveCustomer(CustomerDTO customer) {
+    public CustomerDTO save(CustomerDTO customer) {
         Customer customerEntity = CustomerService.convertToCustomer(customer);
         customerEntity = this.customerRepository.save(customerEntity);
         return CustomerService.convertToCustomerDTO(customerEntity);
     }
 
-    public CustomerDTO updateCustomer(CustomerDTO customer) {
-        this.isCustomerExists(customer.getId());
+    public CustomerDTO update(CustomerDTO customer) {
+        this.isExists(customer.getId());
         Customer customerEntity = CustomerService.convertToCustomer(customer);
         customerEntity = this.customerRepository.save(customerEntity);
         return CustomerService.convertToCustomerDTO(customerEntity);
     }
 
-    public void deleteCustomer(Long id) {
-        this.isCustomerExists(id);
+    public void deleteById(Long id) {
+        this.isExists(id);
         this.customerRepository.deleteById(id);
     }
 
-    private void isCustomerExists(Long id) {
+    public Boolean isExists(Long id) {
         if (!this.customerRepository.existsById(id)) {
             final String errorMessage = "The customer with id = " + id + " not found.";
             CustomerNotFoundException customerNotFoundException = new CustomerNotFoundException(errorMessage);
             LOGGER.error(errorMessage, customerNotFoundException);
             throw customerNotFoundException;
         }
+        return true;
     }
 
     public static Customer convertToCustomer(CustomerDTO customer) {

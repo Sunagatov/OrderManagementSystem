@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
-public class StatusService {
+public class StatusService implements DaoService<StatusDTO> {
 
     private static final Logger LOGGER = LogManager.getLogger(StatusService.class);
     private final StatusRepository statusRepository;
@@ -25,14 +25,14 @@ public class StatusService {
         this.statusRepository = statusRepository;
     }
 
-    public Collection<StatusDTO> getAllStatuses() {
+    public Collection<StatusDTO> getAll() {
         return  ((Collection<Status>) this.statusRepository.findAll())
                 .stream()
                 .map(StatusService::convertToStatusDTO)
                 .collect(Collectors.toList());
     }
 
-    public StatusDTO getStatus(Long id) {
+    public StatusDTO getById(Long id) {
         Status statusEntity = this.statusRepository.findById(id).orElseThrow(() -> {
             final String errorMessage = "The status with id = " + id + " not found.";
             StatusNotFoundException statusNotFoundException = new StatusNotFoundException(errorMessage);
@@ -42,31 +42,32 @@ public class StatusService {
         return StatusService.convertToStatusDTO(statusEntity);
     }
 
-    public StatusDTO saveStatus(StatusDTO status) {
+    public StatusDTO save(StatusDTO status) {
         Status statusEntity = StatusService.convertToStatus(status);
         statusEntity = this.statusRepository.save(statusEntity);
         return StatusService.convertToStatusDTO(statusEntity);
     }
 
-    public StatusDTO updateStatus(StatusDTO status) {
-        this.isStatusExists(status.getId());
+    public StatusDTO update(StatusDTO status) {
+        this.isExists(status.getId());
         Status statusEntity = StatusService.convertToStatus(status);
         statusEntity = this.statusRepository.save(statusEntity);
         return StatusService.convertToStatusDTO(statusEntity);
     }
 
-    public void deleteStatus(Long id) {
-        this.isStatusExists(id);
+    public void deleteById(Long id) {
+        this.isExists(id);
         this.statusRepository.deleteById(id);
     }
 
-    private void isStatusExists(Long id) {
+    public Boolean isExists(Long id) {
         if (!this.statusRepository.existsById(id)) {
             final String errorMessage = "The status with id = " + id + " not found.";
             StatusNotFoundException statusNotFoundException = new StatusNotFoundException(errorMessage);
             LOGGER.error(errorMessage, statusNotFoundException);
             throw statusNotFoundException;
         }
+        return true;
     }
 
     public static StatusDTO convertToStatusDTO(Status status) {
