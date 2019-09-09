@@ -1,11 +1,9 @@
 package com.zufar.dto;
 
-import com.zufar.model.Product;
-
 public class OrderItemDTO {
     
     private Long id;
-    private Product product;
+    private ProductDTO product;
     private Long quantity;
 
     public Long getId() {
@@ -16,11 +14,11 @@ public class OrderItemDTO {
         this.id = id;
     }
 
-    public Product getProduct() {
+    public ProductDTO getProduct() {
         return product;
     }
 
-    public void setProduct(Product product) {
+    public void setProduct(ProductDTO product) {
         this.product = product;
     }
 
