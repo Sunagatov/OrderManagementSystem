@@ -1,18 +1,10 @@
-package com.zufar.models;
+package com.zufar.dto;
 
-import javax.persistence.*;
-
-@Entity
-@Table(name = "statuses")
-public class Status {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class StatusDTO {
+    
     private Long id;
-
-    @Column(name = "name", length = 256)
     private String name;
-
+    
     public Long getId() {
         return id;
     }
@@ -43,9 +35,9 @@ public class Status {
             return true;
         if (obj == null)
             return false;
-        if (!(obj instanceof Status))
+        if (!(obj instanceof StatusDTO))
             return false;
-        Status other = (Status) obj;
+        StatusDTO other = (StatusDTO) obj;
         if (id == null) {
             if (other.id != null)
                 return false;
