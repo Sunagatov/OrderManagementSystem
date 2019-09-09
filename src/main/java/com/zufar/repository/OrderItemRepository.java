@@ -1,6 +1,6 @@
-package com.zufar.repositories;
+package com.zufar.repository;
 
-import com.zufar.models.OrderItem;
+import com.zufar.model.OrderItem;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
