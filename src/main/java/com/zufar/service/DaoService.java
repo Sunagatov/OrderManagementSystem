@@ -6,6 +6,8 @@ public interface DaoService<T> {
     
     Collection<T> getAll();
 
+    Collection<T> getAll(String sortBy);
+
     T getById(Long id);
 
     T save(T entity);

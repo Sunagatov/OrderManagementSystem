@@ -6,10 +6,12 @@ import com.zufar.exception.OrderItemNotFoundException;
 import com.zufar.exception.StatusNotFoundException;
 import com.zufar.model.OrderItem;
 import com.zufar.model.Product;
+import com.zufar.repository.OrderItemPagingAndSortingRepository;
 import com.zufar.repository.OrderItemRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,14 +24,26 @@ public class OrderItemService implements DaoService<OrderItemDTO> {
 
     private static final Logger LOGGER = LogManager.getLogger(OrderItemService.class);
     private final OrderItemRepository orderItemRepository;
+    private final OrderItemPagingAndSortingRepository orderItemPagingAndSortingRepository;
+
 
     @Autowired
-    public OrderItemService(OrderItemRepository orderItemRepository) {
+    public OrderItemService(OrderItemRepository orderItemRepository,
+                            OrderItemPagingAndSortingRepository orderItemPagingAndSortingRepository) {
         this.orderItemRepository = orderItemRepository;
+        this.orderItemPagingAndSortingRepository = orderItemPagingAndSortingRepository;
     }
 
     public Collection<OrderItemDTO> getAll() {
         return ((Collection<OrderItem>) this.orderItemRepository.findAll())
+                .stream()
+                .map(OrderItemService::convertToOrderItemDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public Collection<OrderItemDTO> getAll(String sortBy) {
+        return ((Collection<OrderItem>) this.orderItemPagingAndSortingRepository.findAll(Sort.by(sortBy)))
                 .stream()
                 .map(OrderItemService::convertToOrderItemDTO)
                 .collect(Collectors.toList());

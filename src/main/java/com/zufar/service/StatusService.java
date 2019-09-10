@@ -3,10 +3,12 @@ package com.zufar.service;
 import com.zufar.dto.StatusDTO;
 import com.zufar.exception.StatusNotFoundException;
 import com.zufar.model.Status;
+import com.zufar.repository.StatusPagingAndSortingRepository;
 import com.zufar.repository.StatusRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,14 +21,26 @@ public class StatusService implements DaoService<StatusDTO> {
 
     private static final Logger LOGGER = LogManager.getLogger(StatusService.class);
     private final StatusRepository statusRepository;
+    private final StatusPagingAndSortingRepository statusPagingAndSortingRepository;
+
 
     @Autowired
-    public StatusService(StatusRepository statusRepository) {
+    public StatusService(StatusRepository statusRepository,
+                         StatusPagingAndSortingRepository statusPagingAndSortingRepository) {
         this.statusRepository = statusRepository;
+        this.statusPagingAndSortingRepository = statusPagingAndSortingRepository;
     }
 
     public Collection<StatusDTO> getAll() {
-        return  ((Collection<Status>) this.statusRepository.findAll())
+        return ((Collection<Status>) this.statusRepository.findAll())
+                .stream()
+                .map(StatusService::convertToStatusDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public Collection<StatusDTO> getAll(String sortBy) {
+        return ((Collection<Status>) this.statusPagingAndSortingRepository.findAll(Sort.by(sortBy)))
                 .stream()
                 .map(StatusService::convertToStatusDTO)
                 .collect(Collectors.toList());

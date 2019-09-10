@@ -3,10 +3,12 @@ package com.zufar.service;
 import com.zufar.dto.ProductDTO;
 import com.zufar.exception.ProductNotFoundException;
 import com.zufar.model.Product;
+import com.zufar.repository.ProductPagingAndSortingRepository;
 import com.zufar.repository.ProductRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,10 +21,14 @@ public class ProductService implements DaoService<ProductDTO> {
 
     private static final Logger LOGGER = LogManager.getLogger(ProductService.class);
     private final ProductRepository productRepository;
+    private final ProductPagingAndSortingRepository productPagingAndSortingRepository;
+
 
     @Autowired
-    public ProductService(ProductRepository productRepository) {
+    public ProductService(ProductRepository productRepository,
+                          ProductPagingAndSortingRepository productPagingAndSortingRepository) {
         this.productRepository = productRepository;
+        this.productPagingAndSortingRepository = productPagingAndSortingRepository;
     }
 
     public Collection<ProductDTO> getAll() {
@@ -30,6 +36,14 @@ public class ProductService implements DaoService<ProductDTO> {
                 .stream()
                 .map(ProductService::convertToProductDTO)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Collection<ProductDTO> getAll(String sortBy) {
+        return  ((Collection<Product>) this.productPagingAndSortingRepository.findAll(Sort.by(sortBy)))
+                .stream()
+                .map(ProductService::convertToProductDTO)
+                .collect(Collectors.toList());        
     }
 
     public ProductDTO getById(Long id) {

@@ -9,10 +9,12 @@ import com.zufar.model.Customer;
 import com.zufar.model.Order;
 import com.zufar.model.OrderItem;
 import com.zufar.model.Status;
+import com.zufar.repository.OrderPagingAndSortingRepository;
 import com.zufar.repository.OrderRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,15 +27,25 @@ import java.util.stream.Collectors;
 public class OrderService implements DaoService<OrderDTO> {
 
     private static final Logger LOGGER = LogManager.getLogger(OrderService.class);
-    private OrderRepository orderRepository;
+    private final OrderRepository orderRepository;
+    private final OrderPagingAndSortingRepository orderPagingAndSortingRepository;
 
     @Autowired
-    public OrderService(OrderRepository orderRepository) {
+    public OrderService(OrderRepository orderRepository,
+                        OrderPagingAndSortingRepository orderPagingAndSortingRepository) {
         this.orderRepository = orderRepository;
+        this.orderPagingAndSortingRepository = orderPagingAndSortingRepository;
     }
 
     public Collection<OrderDTO> getAll() {
         return ((Collection<Order>) this.orderRepository.findAll())
+                .stream()
+                .map(OrderService::convertToOrderDTO)
+                .collect(Collectors.toList());
+    }
+
+    public Collection<OrderDTO> getAll(String sortBy) {
+        return ((Collection<Order>) this.orderPagingAndSortingRepository.findAll(Sort.by(sortBy)))
                 .stream()
                 .map(OrderService::convertToOrderDTO)
                 .collect(Collectors.toList());
@@ -55,11 +67,18 @@ public class OrderService implements DaoService<OrderDTO> {
         return OrderService.convertToOrderDTO(orderEntity);
     }
 
-    public OrderDTO update(OrderDTO status) {
-        this.isExists(status.getId());
-        Order orderEntity = OrderService.convertToOrder(status);
+    public OrderDTO update(OrderDTO order) {
+        this.isExists(order.getId());
+        Order orderEntity = OrderService.convertToOrder(order);
         orderEntity = this.orderRepository.save(orderEntity);
         return OrderService.convertToOrderDTO(orderEntity);
+    }
+
+    public OrderDTO updateStatus(StatusDTO status, Long id) {
+        OrderDTO order = this.getById(id);
+        order.setStatus(status);
+        order = this.save(order);
+        return order;
     }
 
     public void deleteById(Long id) {
@@ -99,15 +118,6 @@ public class OrderService implements DaoService<OrderDTO> {
     public static Order convertToOrder(OrderDTO order) {
         UtilService.isObjectNull(order, LOGGER, "There is no order to convert.");
         Order orderEntity = new Order();
-        orderEntity.setTitle(order.getTitle());
-        final Status status = StatusService.convertToStatus(order.getStatus());
-        orderEntity.setId(order.getId());
-        orderEntity.setStatus(status);
-        final Customer customerEntity = CustomerService.convertToCustomer(order.getCustomer());
-        orderEntity.setCustomer(customerEntity);
-        orderEntity.setCreationDate(order.getCreationDate());
-        orderEntity.setLastModifiedDate(order.getLastModifiedDate());
-        orderEntity.setId(order.getId());
         Set<OrderItemDTO> orderItems = order.getOrderItems();
         if (orderItems == null) {
             final String errorMessage = "No order items in the order";
@@ -120,6 +130,15 @@ public class OrderService implements DaoService<OrderDTO> {
                 .map(OrderItemService::convertToOrderItem)
                 .collect(Collectors.toSet());
         orderEntity.setOrderItems(orderEntityItems);
+        orderEntity.setTitle(order.getTitle());
+        final Status status = StatusService.convertToStatus(order.getStatus());
+        orderEntity.setId(order.getId());
+        orderEntity.setStatus(status);
+        final Customer customerEntity = CustomerService.convertToCustomer(order.getCustomer());
+        orderEntity.setCustomer(customerEntity);
+        orderEntity.setCreationDate(order.getCreationDate());
+        orderEntity.setLastModifiedDate(order.getLastModifiedDate());
+        orderEntity.setId(order.getId());
         return orderEntity;
     }
 }
