@@ -1,6 +1,7 @@
 package com.zufar.domain.order;
 
 import com.zufar.domain.customer.CustomerService;
+import com.zufar.domain.item.Item;
 import com.zufar.dto.CustomerDTO;
 import com.zufar.dto.OrderDTO;
 import com.zufar.dto.OrderItemDTO;
@@ -8,8 +9,6 @@ import com.zufar.dto.StatusDTO;
 import com.zufar.exception.OrderNotFoundException;
 import com.zufar.domain.customer.Customer;
 import com.zufar.domain.status.Status;
-import com.zufar.repository.OrderPagingAndSortingRepository;
-import com.zufar.repository.OrderRepository;
 import com.zufar.service.DaoService;
 import com.zufar.domain.item.ItemService;
 import com.zufar.domain.status.StatusService;
@@ -31,13 +30,10 @@ public class OrderService implements DaoService<OrderDTO> {
 
     private static final Logger LOGGER = LogManager.getLogger(OrderService.class);
     private final OrderRepository orderRepository;
-    private final OrderPagingAndSortingRepository orderPagingAndSortingRepository;
 
     @Autowired
-    public OrderService(OrderRepository orderRepository,
-                        OrderPagingAndSortingRepository orderPagingAndSortingRepository) {
+    public OrderService(OrderRepository orderRepository) {
         this.orderRepository = orderRepository;
-        this.orderPagingAndSortingRepository = orderPagingAndSortingRepository;
     }
 
     public Collection<OrderDTO> getAll() {
@@ -48,7 +44,7 @@ public class OrderService implements DaoService<OrderDTO> {
     }
 
     public Collection<OrderDTO> getAll(String sortBy) {
-        return ((Collection<Order>) this.orderPagingAndSortingRepository.findAll(Sort.by(sortBy)))
+        return ((Collection<Order>) this.orderRepository.findAll(Sort.by(sortBy)))
                 .stream()
                 .map(OrderService::convertToOrderDTO)
                 .collect(Collectors.toList());

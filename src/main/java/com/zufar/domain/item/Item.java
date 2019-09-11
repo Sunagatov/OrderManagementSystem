@@ -32,7 +32,13 @@ public class Item {
         this.id = id;
     }
 
+    public Product getProduct() {
+        return product;
+    }
 
+    public void setProduct(Product product) {
+        this.product = product;
+    }
 
     public Long getQuantity() {
         return quantity;

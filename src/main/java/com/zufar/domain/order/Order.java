@@ -1,8 +1,9 @@
 package com.zufar.domain.order;
 
 
-import com.zufar.domain.customer.Customer;
+import com.zufar.domain.item.Item;
 import com.zufar.domain.status.Status;
+import com.zufar.domain.customer.Customer;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 

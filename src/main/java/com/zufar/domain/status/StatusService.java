@@ -4,8 +4,6 @@ import com.zufar.dto.StatusDTO;
 import com.zufar.exception.StatusNotFoundException;
 import com.zufar.service.DaoService;
 import com.zufar.service.UtilService;
-import com.zufar.repository.StatusPagingAndSortingRepository;
-import com.zufar.repository.StatusRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,14 +20,10 @@ public class StatusService implements DaoService<StatusDTO> {
 
     private static final Logger LOGGER = LogManager.getLogger(StatusService.class);
     private final StatusRepository statusRepository;
-    private final StatusPagingAndSortingRepository statusPagingAndSortingRepository;
-
 
     @Autowired
-    public StatusService(StatusRepository statusRepository,
-                         StatusPagingAndSortingRepository statusPagingAndSortingRepository) {
+    public StatusService(StatusRepository statusRepository) {
         this.statusRepository = statusRepository;
-        this.statusPagingAndSortingRepository = statusPagingAndSortingRepository;
     }
 
     public Collection<StatusDTO> getAll() {
@@ -41,7 +35,7 @@ public class StatusService implements DaoService<StatusDTO> {
 
     @Override
     public Collection<StatusDTO> getAll(String sortBy) {
-        return ((Collection<Status>) this.statusPagingAndSortingRepository.findAll(Sort.by(sortBy)))
+        return ((Collection<Status>) this.statusRepository.findAll(Sort.by(sortBy)))
                 .stream()
                 .map(StatusService::convertToStatusDTO)
                 .collect(Collectors.toList());

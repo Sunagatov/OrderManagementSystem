@@ -2,8 +2,6 @@ package com.zufar.domain.customer;
 
 import com.zufar.dto.CustomerDTO;
 import com.zufar.exception.CustomerNotFoundException;
-import com.zufar.repository.CustomerPagingAndSortingRepository;
-import com.zufar.repository.CustomerRepository;
 import com.zufar.service.DaoService;
 import com.zufar.service.UtilService;
 import org.apache.logging.log4j.LogManager;
@@ -22,14 +20,10 @@ public class CustomerService implements DaoService<CustomerDTO> {
 
     private static final Logger LOGGER = LogManager.getLogger(CustomerService.class);
     private final CustomerRepository customerRepository;
-    private final CustomerPagingAndSortingRepository customerPagingAndSortingRepository;
-
 
     @Autowired
-    public CustomerService(CustomerRepository customerRepository,
-                           CustomerPagingAndSortingRepository customerPagingAndSortingRepository) {
+    public CustomerService(CustomerRepository customerRepository) {
         this.customerRepository = customerRepository;
-        this.customerPagingAndSortingRepository = customerPagingAndSortingRepository;
     }
 
     public Collection<CustomerDTO> getAll() {
@@ -41,7 +35,10 @@ public class CustomerService implements DaoService<CustomerDTO> {
 
     @Override
     public Collection<CustomerDTO> getAll(String sortBy) {
-        return ((Collection<Customer>) this.customerPagingAndSortingRepository.findAll(Sort.by(sortBy)))
+        final Iterable<Customer> object = this.customerRepository.findAll(Sort.by(sortBy));
+        Collection<Customer> customers = (object instanceof Collection ? (Collection<Customer>)object : null);
+
+        return ((Collection<Customer>) this.customerRepository.findAll(Sort.by(sortBy)))
                 .stream()
                 .map(CustomerService::convertToCustomerDTO)
                 .collect(Collectors.toList());

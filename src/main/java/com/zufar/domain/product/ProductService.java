@@ -2,8 +2,6 @@ package com.zufar.domain.product;
 
 import com.zufar.dto.ProductDTO;
 import com.zufar.exception.ProductNotFoundException;
-import com.zufar.repository.ProductPagingAndSortingRepository;
-import com.zufar.repository.ProductRepository;
 import com.zufar.service.DaoService;
 import com.zufar.service.UtilService;
 import org.apache.logging.log4j.LogManager;
@@ -22,14 +20,10 @@ public class ProductService implements DaoService<ProductDTO> {
 
     private static final Logger LOGGER = LogManager.getLogger(ProductService.class);
     private final ProductRepository productRepository;
-    private final ProductPagingAndSortingRepository productPagingAndSortingRepository;
-
 
     @Autowired
-    public ProductService(ProductRepository productRepository,
-                          ProductPagingAndSortingRepository productPagingAndSortingRepository) {
+    public ProductService(ProductRepository productRepository) {
         this.productRepository = productRepository;
-        this.productPagingAndSortingRepository = productPagingAndSortingRepository;
     }
 
     public Collection<ProductDTO> getAll() {
@@ -41,7 +35,7 @@ public class ProductService implements DaoService<ProductDTO> {
 
     @Override
     public Collection<ProductDTO> getAll(String sortBy) {
-        return  ((Collection<Product>) this.productPagingAndSortingRepository.findAll(Sort.by(sortBy)))
+        return  ((Collection<Product>) this.productRepository.findAll(Sort.by(sortBy)))
                 .stream()
                 .map(ProductService::convertToProductDTO)
                 .collect(Collectors.toList());        

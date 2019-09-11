@@ -1,8 +1,8 @@
-package com.zufar.repository;
+package com.zufar.domain.order;
 
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ProductPagingAndSortingRepository extends PagingAndSortingRepository<Product, Long> {
+public interface OrderRepository extends PagingAndSortingRepository<Order, Long> {
 }
