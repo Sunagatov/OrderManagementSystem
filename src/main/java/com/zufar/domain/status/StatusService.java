@@ -1,8 +1,9 @@
-package com.zufar.service;
+package com.zufar.domain.status;
 
 import com.zufar.dto.StatusDTO;
 import com.zufar.exception.StatusNotFoundException;
-import com.zufar.model.Status;
+import com.zufar.service.DaoService;
+import com.zufar.service.UtilService;
 import com.zufar.repository.StatusPagingAndSortingRepository;
 import com.zufar.repository.StatusRepository;
 import org.apache.logging.log4j.LogManager;

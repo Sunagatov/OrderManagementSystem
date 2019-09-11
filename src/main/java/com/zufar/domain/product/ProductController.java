@@ -1,10 +1,8 @@
-package com.zufar.controller;
+package com.zufar.domain.product;
 
 import com.zufar.dto.ProductDTO;
-import com.zufar.service.ProductService;
 import com.zufar.service.DaoService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 

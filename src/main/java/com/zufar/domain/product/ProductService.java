@@ -1,10 +1,11 @@
-package com.zufar.service;
+package com.zufar.domain.product;
 
 import com.zufar.dto.ProductDTO;
 import com.zufar.exception.ProductNotFoundException;
-import com.zufar.model.Product;
 import com.zufar.repository.ProductPagingAndSortingRepository;
 import com.zufar.repository.ProductRepository;
+import com.zufar.service.DaoService;
+import com.zufar.service.UtilService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

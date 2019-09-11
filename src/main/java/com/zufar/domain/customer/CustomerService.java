@@ -1,10 +1,11 @@
-package com.zufar.service;
+package com.zufar.domain.customer;
 
 import com.zufar.dto.CustomerDTO;
 import com.zufar.exception.CustomerNotFoundException;
-import com.zufar.model.Customer;
 import com.zufar.repository.CustomerPagingAndSortingRepository;
 import com.zufar.repository.CustomerRepository;
+import com.zufar.service.DaoService;
+import com.zufar.service.UtilService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

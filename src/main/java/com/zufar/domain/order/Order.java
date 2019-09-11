@@ -1,6 +1,8 @@
-package com.zufar.model;
+package com.zufar.domain.order;
 
 
+import com.zufar.domain.customer.Customer;
+import com.zufar.domain.status.Status;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -42,7 +44,7 @@ public class Order {
     @JoinTable(name = "order_order_items",
             joinColumns = {@JoinColumn(name = "order_id")},
             inverseJoinColumns = {@JoinColumn(name = "order_item_id")})
-    private Set<OrderItem> orderItems; 
+    private Set<Item> items; 
 
     public Long getId() {
         return id;
@@ -92,12 +94,12 @@ public class Order {
         this.customer = customer;
     }
 
-    public Set<OrderItem> getOrderItems() {
-        return orderItems;
+    public Set<Item> getItems() {
+        return items;
     }
 
-    public void setOrderItems(Set<OrderItem> orderItems) {
-        this.orderItems = orderItems;
+    public void setItems(Set<Item> items) {
+        this.items = items;
     }
 
     @Override
@@ -109,7 +111,7 @@ public class Order {
                 ", lastModifiedDate=" + lastModifiedDate +
                 ", status=" + status +
                 ", customer=" + customer +
-                ", orderItems=" + orderItems +
+                ", orderItems=" + items +
                 '}';
     }
 
@@ -152,10 +154,10 @@ public class Order {
                 return false;
         } else if (!customer.equals(other.customer))
             return false;
-        if (orderItems == null) {
-            if (other.orderItems != null)
+        if (items == null) {
+            if (other.items != null)
                 return false;
-        } else if (!orderItems.equals(other.orderItems))
+        } else if (!items.equals(other.items))
             return false;
 
         return true;
@@ -171,7 +173,7 @@ public class Order {
         result = prime * result + ((lastModifiedDate == null) ? 0 : lastModifiedDate.hashCode());
         result = prime * result + ((status == null) ? 0 : status.hashCode());
         result = prime * result + ((customer == null) ? 0 : customer.hashCode());
-        result = prime * result + ((orderItems == null) ? 0 : orderItems.hashCode());
+        result = prime * result + ((items == null) ? 0 : items.hashCode());
         return result;
     }
 }

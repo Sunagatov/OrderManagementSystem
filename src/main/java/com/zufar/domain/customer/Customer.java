@@ -1,4 +1,4 @@
-package com.zufar.model;
+package com.zufar.domain.customer;
 
 import javax.persistence.*;
 

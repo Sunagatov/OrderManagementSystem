@@ -1,8 +1,7 @@
-package com.zufar.controller;
+package com.zufar.domain.order;
 
 import com.zufar.dto.OrderDTO;
 import com.zufar.dto.StatusDTO;
-import com.zufar.service.OrderService;
 import com.zufar.service.DaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;

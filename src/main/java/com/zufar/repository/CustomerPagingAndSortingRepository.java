@@ -1,6 +1,6 @@
 package com.zufar.repository;
 
-import com.zufar.model.Customer;
+import com.zufar.domain.customer.Customer;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 

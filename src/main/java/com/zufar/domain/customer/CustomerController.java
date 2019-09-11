@@ -1,7 +1,6 @@
-package com.zufar.controller;
+package com.zufar.domain.customer;
 
 import com.zufar.dto.CustomerDTO;
-import com.zufar.service.CustomerService;
 import com.zufar.service.DaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;

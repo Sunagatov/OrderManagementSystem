@@ -1,4 +1,4 @@
-package com.zufar.model;
+package com.zufar.domain.status;
 
 import javax.persistence.*;
 

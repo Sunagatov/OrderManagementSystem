@@ -1,6 +1,6 @@
 package com.zufar.repository;
 
-import com.zufar.model.Status;
+import com.zufar.domain.status.Status;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,13 +1,14 @@
-package com.zufar.service;
+package com.zufar.domain.item;
 
 import com.zufar.dto.OrderItemDTO;
 import com.zufar.dto.ProductDTO;
-import com.zufar.exception.OrderItemNotFoundException;
+import com.zufar.exception.ItemNotFoundException;
 import com.zufar.exception.StatusNotFoundException;
-import com.zufar.model.OrderItem;
-import com.zufar.model.Product;
+import com.zufar.domain.product.ProductService;
 import com.zufar.repository.OrderItemPagingAndSortingRepository;
 import com.zufar.repository.OrderItemRepository;
+import com.zufar.service.DaoService;
+import com.zufar.service.UtilService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,56 +21,56 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
-public class OrderItemService implements DaoService<OrderItemDTO> {
+public class ItemService implements DaoService<OrderItemDTO> {
 
-    private static final Logger LOGGER = LogManager.getLogger(OrderItemService.class);
+    private static final Logger LOGGER = LogManager.getLogger(ItemService.class);
     private final OrderItemRepository orderItemRepository;
     private final OrderItemPagingAndSortingRepository orderItemPagingAndSortingRepository;
 
 
     @Autowired
-    public OrderItemService(OrderItemRepository orderItemRepository,
-                            OrderItemPagingAndSortingRepository orderItemPagingAndSortingRepository) {
+    public ItemService(OrderItemRepository orderItemRepository,
+                       OrderItemPagingAndSortingRepository orderItemPagingAndSortingRepository) {
         this.orderItemRepository = orderItemRepository;
         this.orderItemPagingAndSortingRepository = orderItemPagingAndSortingRepository;
     }
 
     public Collection<OrderItemDTO> getAll() {
-        return ((Collection<OrderItem>) this.orderItemRepository.findAll())
+        return ((Collection<Item>) this.orderItemRepository.findAll())
                 .stream()
-                .map(OrderItemService::convertToOrderItemDTO)
+                .map(ItemService::convertToOrderItemDTO)
                 .collect(Collectors.toList());
     }
 
     @Override
     public Collection<OrderItemDTO> getAll(String sortBy) {
-        return ((Collection<OrderItem>) this.orderItemPagingAndSortingRepository.findAll(Sort.by(sortBy)))
+        return ((Collection<Item>) this.orderItemPagingAndSortingRepository.findAll(Sort.by(sortBy)))
                 .stream()
-                .map(OrderItemService::convertToOrderItemDTO)
+                .map(ItemService::convertToOrderItemDTO)
                 .collect(Collectors.toList());
     }
 
     public OrderItemDTO getById(Long id) {
-        OrderItem orderEntity = this.orderItemRepository.findById(id).orElseThrow(() -> {
+        Item orderEntity = this.orderItemRepository.findById(id).orElseThrow(() -> {
             final String errorMessage = "The orderItem with id = " + id + " not found.";
-            OrderItemNotFoundException orderItemNotFoundException = new OrderItemNotFoundException(errorMessage);
-            LOGGER.error(errorMessage, orderItemNotFoundException);
-            return orderItemNotFoundException;
+            ItemNotFoundException itemNotFoundException = new ItemNotFoundException(errorMessage);
+            LOGGER.error(errorMessage, itemNotFoundException);
+            return itemNotFoundException;
         });
-        return OrderItemService.convertToOrderItemDTO(orderEntity);
+        return ItemService.convertToOrderItemDTO(orderEntity);
     }
 
     public OrderItemDTO save(OrderItemDTO orderItem) {
-        OrderItem orderItemEntity = OrderItemService.convertToOrderItem(orderItem);
-        orderItemEntity = this.orderItemRepository.save(orderItemEntity);
-        return OrderItemService.convertToOrderItemDTO(orderItemEntity);
+        Item itemEntity = ItemService.convertToOrderItem(orderItem);
+        itemEntity = this.orderItemRepository.save(itemEntity);
+        return ItemService.convertToOrderItemDTO(itemEntity);
     }
 
     public OrderItemDTO update(OrderItemDTO orderItem) {
         this.isExists(orderItem.getId());
-        OrderItem orderItemEntity = OrderItemService.convertToOrderItem(orderItem);
-        orderItemEntity = this.orderItemRepository.save(orderItemEntity);
-        return OrderItemService.convertToOrderItemDTO(orderItemEntity);
+        Item itemEntity = ItemService.convertToOrderItem(orderItem);
+        itemEntity = this.orderItemRepository.save(itemEntity);
+        return ItemService.convertToOrderItemDTO(itemEntity);
     }
 
     public void deleteById(Long id) {
@@ -87,23 +88,23 @@ public class OrderItemService implements DaoService<OrderItemDTO> {
         return true;
     }
 
-    public static OrderItemDTO convertToOrderItemDTO(OrderItem orderItem) {
-        UtilService.isObjectNull(orderItem, LOGGER, "There is no orderItem to convert.");
+    public static OrderItemDTO convertToOrderItemDTO(Item item) {
+        UtilService.isObjectNull(item, LOGGER, "There is no orderItem to convert.");
         OrderItemDTO orderItemDTO = new OrderItemDTO();
-        orderItemDTO.setId(orderItem.getId());
-        final ProductDTO product = ProductService.convertToProductDTO(orderItem.getProduct());
+        orderItemDTO.setId(item.getId());
+        final ProductDTO product = ProductService.convertToProductDTO(item.getProduct());
         orderItemDTO.setProduct(product);
-        orderItemDTO.setQuantity(orderItem.getQuantity());
+        orderItemDTO.setQuantity(item.getQuantity());
         return orderItemDTO;
     }
 
-    public static OrderItem convertToOrderItem(OrderItemDTO orderItem) {
+    public static Item convertToOrderItem(OrderItemDTO orderItem) {
         UtilService.isObjectNull(orderItem, LOGGER, "There is no orderItem to convert.");
-        OrderItem orderItemEntity = new OrderItem();
-        orderItemEntity.setId(orderItem.getId());
+        Item itemEntity = new Item();
+        itemEntity.setId(orderItem.getId());
         final Product product = ProductService.convertToProduct(orderItem.getProduct());
-        orderItemEntity.setProduct(product);
-        orderItemEntity.setQuantity(orderItem.getQuantity());
-        return orderItemEntity;
+        itemEntity.setProduct(product);
+        itemEntity.setQuantity(orderItem.getQuantity());
+        return itemEntity;
     }
 }

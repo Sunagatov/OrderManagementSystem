@@ -1,6 +1,6 @@
 package com.zufar.repository;
 
-import com.zufar.model.Order;
+import com.zufar.domain.order.Order;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

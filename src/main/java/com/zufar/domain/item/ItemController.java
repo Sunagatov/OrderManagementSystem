@@ -1,7 +1,6 @@
-package com.zufar.controller;
+package com.zufar.domain.item;
 
 import com.zufar.dto.OrderItemDTO;
-import com.zufar.service.OrderItemService;
 import com.zufar.service.DaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -11,13 +10,13 @@ import java.util.Collection;
 
 @RestController
 @RequestMapping(value = "orderItems", produces = {MediaType.APPLICATION_JSON_VALUE})
-public class OrderItemController {
+public class ItemController {
 
     private final DaoService<OrderItemDTO> orderItemService;
 
     @Autowired
-    public OrderItemController(OrderItemService orderItemService) {
-        this.orderItemService = orderItemService;
+    public ItemController(ItemService itemService) {
+        this.orderItemService = itemService;
     }
 
     @GetMapping(value = "/all")

@@ -1,16 +1,19 @@
-package com.zufar.service;
+package com.zufar.domain.order;
 
+import com.zufar.domain.customer.CustomerService;
 import com.zufar.dto.CustomerDTO;
 import com.zufar.dto.OrderDTO;
 import com.zufar.dto.OrderItemDTO;
 import com.zufar.dto.StatusDTO;
 import com.zufar.exception.OrderNotFoundException;
-import com.zufar.model.Customer;
-import com.zufar.model.Order;
-import com.zufar.model.OrderItem;
-import com.zufar.model.Status;
+import com.zufar.domain.customer.Customer;
+import com.zufar.domain.status.Status;
 import com.zufar.repository.OrderPagingAndSortingRepository;
 import com.zufar.repository.OrderRepository;
+import com.zufar.service.DaoService;
+import com.zufar.domain.item.ItemService;
+import com.zufar.domain.status.StatusService;
+import com.zufar.service.UtilService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,9 +110,9 @@ public class OrderService implements DaoService<OrderDTO> {
         orderDTO.setId(order.getId());
         final CustomerDTO customer = CustomerService.convertToCustomerDTO(order.getCustomer());
         orderDTO.setCustomer(customer);
-        final Set<OrderItemDTO> orderItems = order.getOrderItems()
+        final Set<OrderItemDTO> orderItems = order.getItems()
                 .stream()
-                .map(OrderItemService::convertToOrderItemDTO)
+                .map(ItemService::convertToOrderItemDTO)
                 .collect(Collectors.toSet());
         orderDTO.setOrderItems(orderItems);
         return orderDTO;
@@ -125,11 +128,11 @@ public class OrderService implements DaoService<OrderDTO> {
             LOGGER.error(errorMessage, illegalArgumentException);
             throw illegalArgumentException;
         }
-        Set<OrderItem> orderEntityItems = orderItems
+        Set<Item> orderEntityItems = orderItems
                 .stream()
-                .map(OrderItemService::convertToOrderItem)
+                .map(ItemService::convertToOrderItem)
                 .collect(Collectors.toSet());
-        orderEntity.setOrderItems(orderEntityItems);
+        orderEntity.setItems(orderEntityItems);
         orderEntity.setTitle(order.getTitle());
         final Status status = StatusService.convertToStatus(order.getStatus());
         orderEntity.setId(order.getId());

@@ -4,18 +4,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(value = HttpStatus.NOT_FOUND)
-public class OrderItemNotFoundException extends RuntimeException {
+public class ItemNotFoundException extends RuntimeException {
 
-    public OrderItemNotFoundException() {
+    public ItemNotFoundException() {
         super();
     }
-    public OrderItemNotFoundException(String message, Throwable cause) {
+    public ItemNotFoundException(String message, Throwable cause) {
         super(message, cause);
     }
-    public OrderItemNotFoundException(String message) {
+    public ItemNotFoundException(String message) {
         super(message);
     }
-    public OrderItemNotFoundException(Throwable cause) {
+    public ItemNotFoundException(Throwable cause) {
         super(cause);
     }
 }
