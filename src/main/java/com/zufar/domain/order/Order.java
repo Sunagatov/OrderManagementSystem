@@ -4,10 +4,7 @@ package com.zufar.domain.order;
 import com.zufar.domain.item.Item;
 import com.zufar.domain.status.Status;
 import com.zufar.domain.customer.Customer;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -18,6 +15,8 @@ import java.util.Set;
 @Entity
 @Table(name = "orders")
 @Getter @Setter @EqualsAndHashCode @ToString
+@AllArgsConstructor
+@NoArgsConstructor
 public class Order {
     
     @Id

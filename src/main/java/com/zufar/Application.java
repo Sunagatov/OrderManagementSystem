@@ -58,7 +58,7 @@ public class Application {
         order.setStatus(status);
         Set<ItemDTO> orderItems = new HashSet<>();
         orderItems.add(orderItem);
-        order.setOrderItems(orderItems);
+        order.setItems(orderItems);
         final OrderService orderService = applicationContext.getBean(OrderService.class);
 //        order = orderService.save(order);
 //        System.out.println(order);

@@ -97,47 +97,46 @@ public class OrderService implements DaoService<OrderDTO> {
 
     public static OrderDTO convertToOrderDTO(Order order) {
         Objects.requireNonNull(order, "There is no order to convert.");
-        OrderDTO orderDTO = new OrderDTO();
-        orderDTO.setTitle(order.getTitle());
-        final StatusDTO statusDTO = StatusService.convertToStatusDTO(order.getStatus());
-        orderDTO.setStatus(statusDTO);
-        orderDTO.setCreationDate(order.getCreationDate());
-        orderDTO.setLastModifiedDate(order.getLastModifiedDate());
-        orderDTO.setId(order.getId());
+        final StatusDTO status = StatusService.convertToStatusDTO(order.getStatus());
         final CustomerDTO customer = CustomerService.convertToCustomerDTO(order.getCustomer());
-        orderDTO.setCustomer(customer);
-        final Set<ItemDTO> orderItems = order.getItems()
+        final Set<ItemDTO> items = order.getItems()
                 .stream()
                 .map(ItemService::convertToOrderItemDTO)
                 .collect(Collectors.toSet());
-        orderDTO.setOrderItems(orderItems);
-        return orderDTO;
+        return new OrderDTO(
+                order.getId(),
+                order.getTitle(),
+                order.getCreationDate(),
+                order.getLastModifiedDate(),
+                status,
+                customer,
+                items
+        );
     }
 
     public static Order convertToOrder(OrderDTO order) {
         Objects.requireNonNull(order, "There is no order to convert.");
-        Order orderEntity = new Order();
-        Set<ItemDTO> orderItems = order.getOrderItems();
-        if (orderItems == null) {
+        Set<ItemDTO> dtoItems = order.getItems();
+        if (dtoItems == null) {
             final String errorMessage = "No order items in the order";
             final IllegalArgumentException illegalArgumentException = new IllegalArgumentException(errorMessage);
             LOGGER.error(errorMessage, illegalArgumentException);
             throw illegalArgumentException;
         }
-        Set<Item> orderEntityItems = orderItems
+        Set<Item> items = dtoItems
                 .stream()
                 .map(ItemService::convertToOrderItem)
                 .collect(Collectors.toSet());
-        orderEntity.setItems(orderEntityItems);
-        orderEntity.setTitle(order.getTitle());
         final Status status = StatusService.convertToStatus(order.getStatus());
-        orderEntity.setId(order.getId());
-        orderEntity.setStatus(status);
-        final Customer customerEntity = CustomerService.convertToCustomer(order.getCustomer());
-        orderEntity.setCustomer(customerEntity);
-        orderEntity.setCreationDate(order.getCreationDate());
-        orderEntity.setLastModifiedDate(order.getLastModifiedDate());
-        orderEntity.setId(order.getId());
-        return orderEntity;
+        final Customer customer = CustomerService.convertToCustomer(order.getCustomer());
+        return new Order(
+                order.getId(),
+                order.getTitle(),
+                order.getCreationDate(),
+                order.getLastModifiedDate(),
+                status,
+                customer,
+                items
+        );
     }
 }

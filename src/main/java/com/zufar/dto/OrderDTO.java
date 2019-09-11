@@ -1,9 +1,6 @@
 package com.zufar.dto;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -12,6 +9,8 @@ import java.util.Set;
 @Setter
 @EqualsAndHashCode
 @ToString
+@AllArgsConstructor
+@NoArgsConstructor
 public class OrderDTO {
     
     private Long id;
@@ -20,5 +19,5 @@ public class OrderDTO {
     private LocalDateTime lastModifiedDate;
     private StatusDTO status;
     private CustomerDTO customer;
-    private Set<ItemDTO> orderItems;
+    private Set<ItemDTO> Items;
 }

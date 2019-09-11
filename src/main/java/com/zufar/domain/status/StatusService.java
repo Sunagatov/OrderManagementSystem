@@ -1,5 +1,6 @@
 package com.zufar.domain.status;
 
+import com.zufar.domain.customer.Customer;
 import com.zufar.dto.StatusDTO;
 import com.zufar.exception.StatusNotFoundException;
 import com.zufar.service.DaoService;
@@ -81,17 +82,15 @@ public class StatusService implements DaoService<StatusDTO> {
 
     public static StatusDTO convertToStatusDTO(Status status) {
         Objects.requireNonNull(status, "There is no status to convert.");
-        StatusDTO statusDTO = new StatusDTO();
-        statusDTO.setId(status.getId());
-        statusDTO.setName(status.getName());
-        return statusDTO;
+        return new StatusDTO(
+                status.getId(),
+                status.getName());
     }
 
     public static Status convertToStatus(StatusDTO status) {
         Objects.requireNonNull(status, "There is no status to convert.");
-        Status statusEntity = new Status();
-        statusEntity.setId(status.getId());
-        statusEntity.setName(status.getName());
-        return statusEntity;
+        return new Status(
+                status.getId(),
+                status.getName());
     }
 }

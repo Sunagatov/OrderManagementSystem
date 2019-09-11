@@ -1,6 +1,7 @@
 package com.zufar.domain.product;
 
 import com.zufar.dto.ProductDTO;
+import com.zufar.dto.StatusDTO;
 import com.zufar.exception.ProductNotFoundException;
 import com.zufar.service.DaoService;
 import org.apache.logging.log4j.LogManager;
@@ -81,17 +82,15 @@ public class ProductService implements DaoService<ProductDTO> {
 
     public static Product convertToProduct(ProductDTO product) {
         Objects.requireNonNull(product, "There is no product to convert.");
-        Product productEntity = new Product();
-        productEntity.setId(product.getId());
-        productEntity.setName(product.getName());
-        return productEntity;
+        return new Product(
+                product.getId(),
+                product.getName());
     }
 
     public static ProductDTO convertToProductDTO(Product product) {
         Objects.requireNonNull(product, "There is no product to convert.");
-        ProductDTO productEntity = new ProductDTO();
-        productEntity.setId(product.getId());
-        productEntity.setName(product.getName());
-        return productEntity;
+        return new ProductDTO(
+                product.getId(),
+                product.getName());
     }
 }

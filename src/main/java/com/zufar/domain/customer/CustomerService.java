@@ -81,23 +81,21 @@ public class CustomerService implements DaoService<CustomerDTO> {
 
     public static Customer convertToCustomer(CustomerDTO customer) {
         Objects.requireNonNull(customer, "There is no customer to convert.");
-        Customer customerEntity = new Customer();
-        customerEntity.setId(customer.getId());
-        customerEntity.setName(customer.getName());
-        customerEntity.setEmail(customer.getEmail());
-        customerEntity.setLogin(customer.getLogin());
-        customerEntity.setPassword(customer.getPassword());
-        return customerEntity;
+        return new Customer(
+                customer.getId(),
+                customer.getName(),
+                customer.getEmail(),
+                customer.getLogin(),
+                customer.getPassword());
     }
 
     public static CustomerDTO convertToCustomerDTO(Customer customer) {
         Objects.requireNonNull(customer, "There is no customer to convert.");
-        CustomerDTO customerDTO = new CustomerDTO();
-        customerDTO.setId(customer.getId());
-        customerDTO.setName(customer.getName());
-        customerDTO.setEmail(customer.getEmail());
-        customerDTO.setLogin(customer.getLogin());
-        customerDTO.setPassword(customer.getPassword());
-        return customerDTO;
+        return new CustomerDTO(
+                customer.getId(),
+                customer.getName(),
+                customer.getEmail(),
+                customer.getLogin(),
+                customer.getPassword());
     }
 }

@@ -85,21 +85,21 @@ public class ItemService implements DaoService<ItemDTO> {
 
     public static ItemDTO convertToOrderItemDTO(Item item) {
         Objects.requireNonNull(item, "There is no orderItem to convert.");
-        ItemDTO orderItemDTO = new ItemDTO();
-        orderItemDTO.setId(item.getId());
         final ProductDTO product = ProductService.convertToProductDTO(item.getProduct());
-        orderItemDTO.setProduct(product);
-        orderItemDTO.setQuantity(item.getQuantity());
-        return orderItemDTO;
+        return new ItemDTO(
+                item.getId(),
+                product,
+                item.getQuantity()
+             );
     }
 
     public static Item convertToOrderItem(ItemDTO item) {
         Objects.requireNonNull(item, "There is no item to convert.");
-        Item itemEntity = new Item();
-        itemEntity.setId(item.getId());
         final Product product = ProductService.convertToProduct(item.getProduct());
-        itemEntity.setProduct(product);
-        itemEntity.setQuantity(item.getQuantity());
-        return itemEntity;
+        return new Item(
+                item.getId(),
+                product,
+                item.getQuantity()
+        );
     }
 }
