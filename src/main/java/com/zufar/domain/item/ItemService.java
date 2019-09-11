@@ -55,15 +55,15 @@ public class ItemService implements DaoService<ItemDTO> {
         return ItemService.convertToOrderItemDTO(orderEntity);
     }
 
-    public ItemDTO save(ItemDTO orderItem) {
-        Item itemEntity = ItemService.convertToOrderItem(orderItem);
+    public ItemDTO save(ItemDTO item) {
+        Item itemEntity = ItemService.convertToOrderItem(item);
         itemEntity = this.itemRepository.save(itemEntity);
         return ItemService.convertToOrderItemDTO(itemEntity);
     }
 
-    public ItemDTO update(ItemDTO orderItem) {
-        this.isExists(orderItem.getId());
-        Item itemEntity = ItemService.convertToOrderItem(orderItem);
+    public ItemDTO update(ItemDTO item) {
+        this.isExists(item.getId());
+        Item itemEntity = ItemService.convertToOrderItem(item);
         itemEntity = this.itemRepository.save(itemEntity);
         return ItemService.convertToOrderItemDTO(itemEntity);
     }

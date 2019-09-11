@@ -20,7 +20,7 @@ public class OrderController {
         this.orderService = orderService;
     }
 
-    @GetMapping(value = "/all")
+    @GetMapping
     public @ResponseBody
     Collection<OrderDTO> getOrders(@RequestParam(required = false) String sortBy) {
         if (sortBy == null) {
@@ -56,6 +56,10 @@ public class OrderController {
     @PutMapping(value = "/{orderId}")
     public @ResponseBody
     OrderDTO changeOrderStatus(@RequestBody StatusDTO status, @RequestParam Long orderId) {
-        return ((OrderService) this.orderService).updateStatus(status, orderId);
+        OrderService service = (orderService instanceof OrderService ? (OrderService)orderService : null);
+        if (service == null) {
+            throw new ClassCastException("Getting orderService is impossible.");
+        }
+        return service.updateStatus(status, orderId);
     }
 }

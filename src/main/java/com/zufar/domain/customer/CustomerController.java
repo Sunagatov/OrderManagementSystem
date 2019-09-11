@@ -19,7 +19,7 @@ public class CustomerController {
         this.customerService = customerService;
     }
 
-    @GetMapping(value = "/all")
+    @GetMapping
     public @ResponseBody
     Collection<CustomerDTO> getCustomers() {
         return this.customerService.getAll();

@@ -19,7 +19,7 @@ public class StatusController {
         this.statusService = statusService;
     }
 
-    @GetMapping(value = "/all")
+    @GetMapping
     public @ResponseBody
     Collection<StatusDTO> getStatuses() {
         return this.statusService.getAll();
