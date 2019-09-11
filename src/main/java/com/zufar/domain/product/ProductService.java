@@ -3,7 +3,6 @@ package com.zufar.domain.product;
 import com.zufar.dto.ProductDTO;
 import com.zufar.exception.ProductNotFoundException;
 import com.zufar.service.DaoService;
-import com.zufar.service.UtilService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -80,7 +80,7 @@ public class ProductService implements DaoService<ProductDTO> {
     }
 
     public static Product convertToProduct(ProductDTO product) {
-        UtilService.isObjectNull(product, LOGGER, "There is no product to convert.");
+        Objects.requireNonNull(product, "There is no product to convert.");
         Product productEntity = new Product();
         productEntity.setId(product.getId());
         productEntity.setName(product.getName());
@@ -88,7 +88,7 @@ public class ProductService implements DaoService<ProductDTO> {
     }
 
     public static ProductDTO convertToProductDTO(Product product) {
-        UtilService.isObjectNull(product, LOGGER, "There is no product to convert.");
+        Objects.requireNonNull(product, "There is no product to convert.");
         ProductDTO productEntity = new ProductDTO();
         productEntity.setId(product.getId());
         productEntity.setName(product.getName());

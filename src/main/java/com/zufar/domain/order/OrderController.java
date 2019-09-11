@@ -53,7 +53,7 @@ public class OrderController {
         return this.orderService.update(order);
     }
 
-    @PutMapping
+    @PutMapping(value = "/{orderId}")
     public @ResponseBody
     OrderDTO changeOrderStatus(@RequestBody StatusDTO status, @RequestParam Long orderId) {
         return ((OrderService) this.orderService).updateStatus(status, orderId);

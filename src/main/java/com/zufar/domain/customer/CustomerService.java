@@ -3,7 +3,6 @@ package com.zufar.domain.customer;
 import com.zufar.dto.CustomerDTO;
 import com.zufar.exception.CustomerNotFoundException;
 import com.zufar.service.DaoService;
-import com.zufar.service.UtilService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,9 +35,6 @@ public class CustomerService implements DaoService<CustomerDTO> {
 
     @Override
     public Collection<CustomerDTO> getAll(String sortBy) {
-        final Iterable<Customer> object = this.customerRepository.findAll(Sort.by(sortBy));
-        Collection<Customer> customers = (object instanceof Collection ? (Collection<Customer>)object : null);
-
         return ((Collection<Customer>) this.customerRepository.findAll(Sort.by(sortBy)))
                 .stream()
                 .map(CustomerService::convertToCustomerDTO)
@@ -83,7 +80,7 @@ public class CustomerService implements DaoService<CustomerDTO> {
     }
 
     public static Customer convertToCustomer(CustomerDTO customer) {
-        UtilService.isObjectNull(customer, LOGGER, "There is no customer to convert.");
+        Objects.requireNonNull(customer, "There is no customer to convert.");
         Customer customerEntity = new Customer();
         customerEntity.setId(customer.getId());
         customerEntity.setName(customer.getName());
@@ -94,7 +91,7 @@ public class CustomerService implements DaoService<CustomerDTO> {
     }
 
     public static CustomerDTO convertToCustomerDTO(Customer customer) {
-        UtilService.isObjectNull(customer, LOGGER, "There is no customer to convert.");
+        Objects.requireNonNull(customer, "There is no customer to convert.");
         CustomerDTO customerDTO = new CustomerDTO();
         customerDTO.setId(customer.getId());
         customerDTO.setName(customer.getName());

@@ -1,11 +1,12 @@
 package com.zufar;
 
+
 import com.zufar.domain.customer.CustomerService;
-import com.zufar.dto.*;
 import com.zufar.domain.item.ItemService;
 import com.zufar.domain.order.OrderService;
 import com.zufar.domain.product.ProductService;
 import com.zufar.domain.status.StatusService;
+import com.zufar.dto.*;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -42,7 +43,7 @@ public class Application {
         customer = customerService.save(customer);
         System.out.println(customer);
 
-        OrderItemDTO orderItem = new OrderItemDTO();
+        ItemDTO orderItem = new ItemDTO();
         orderItem.setQuantity(4L);
         orderItem.setProduct(product);
         final ItemService itemService = applicationContext.getBean(ItemService.class);
@@ -55,11 +56,11 @@ public class Application {
         order.setLastModifiedDate(LocalDateTime.now());
         order.setCustomer(customer);
         order.setStatus(status);
-        Set<OrderItemDTO> orderItems = new HashSet<>();
+        Set<ItemDTO> orderItems = new HashSet<>();
         orderItems.add(orderItem);
         order.setOrderItems(orderItems);
         final OrderService orderService = applicationContext.getBean(OrderService.class);
-        order = orderService.save(order);
-        System.out.println(order);
+//        order = orderService.save(order);
+//        System.out.println(order);
     }
 }

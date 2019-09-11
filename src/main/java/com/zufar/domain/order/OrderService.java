@@ -4,7 +4,7 @@ import com.zufar.domain.customer.CustomerService;
 import com.zufar.domain.item.Item;
 import com.zufar.dto.CustomerDTO;
 import com.zufar.dto.OrderDTO;
-import com.zufar.dto.OrderItemDTO;
+import com.zufar.dto.ItemDTO;
 import com.zufar.dto.StatusDTO;
 import com.zufar.exception.OrderNotFoundException;
 import com.zufar.domain.customer.Customer;
@@ -12,7 +12,6 @@ import com.zufar.domain.status.Status;
 import com.zufar.service.DaoService;
 import com.zufar.domain.item.ItemService;
 import com.zufar.domain.status.StatusService;
-import com.zufar.service.UtilService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -96,7 +96,7 @@ public class OrderService implements DaoService<OrderDTO> {
     }
 
     public static OrderDTO convertToOrderDTO(Order order) {
-        UtilService.isObjectNull(order, LOGGER, "There is no order to convert.");
+        Objects.requireNonNull(order, "There is no order to convert.");
         OrderDTO orderDTO = new OrderDTO();
         orderDTO.setTitle(order.getTitle());
         final StatusDTO statusDTO = StatusService.convertToStatusDTO(order.getStatus());
@@ -106,7 +106,7 @@ public class OrderService implements DaoService<OrderDTO> {
         orderDTO.setId(order.getId());
         final CustomerDTO customer = CustomerService.convertToCustomerDTO(order.getCustomer());
         orderDTO.setCustomer(customer);
-        final Set<OrderItemDTO> orderItems = order.getItems()
+        final Set<ItemDTO> orderItems = order.getItems()
                 .stream()
                 .map(ItemService::convertToOrderItemDTO)
                 .collect(Collectors.toSet());
@@ -115,9 +115,9 @@ public class OrderService implements DaoService<OrderDTO> {
     }
 
     public static Order convertToOrder(OrderDTO order) {
-        UtilService.isObjectNull(order, LOGGER, "There is no order to convert.");
+        Objects.requireNonNull(order, "There is no order to convert.");
         Order orderEntity = new Order();
-        Set<OrderItemDTO> orderItems = order.getOrderItems();
+        Set<ItemDTO> orderItems = order.getOrderItems();
         if (orderItems == null) {
             final String errorMessage = "No order items in the order";
             final IllegalArgumentException illegalArgumentException = new IllegalArgumentException(errorMessage);

@@ -1,6 +1,6 @@
 package com.zufar.dto;
 
-public class OrderItemDTO {
+public class ItemDTO {
     
     private Long id;
     private ProductDTO product;
@@ -45,9 +45,9 @@ public class OrderItemDTO {
             return true;
         if (obj == null)
             return false;
-        if (!(obj instanceof OrderItemDTO))
+        if (!(obj instanceof ItemDTO))
             return false;
-        OrderItemDTO other = (OrderItemDTO) obj;
+        ItemDTO other = (ItemDTO) obj;
         if (id == null) {
             if (other.id != null)
                 return false;

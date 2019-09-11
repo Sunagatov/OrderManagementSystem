@@ -11,7 +11,7 @@ public class OrderDTO {
     private LocalDateTime lastModifiedDate;
     private StatusDTO status;
     private CustomerDTO customer;
-    private Set<OrderItemDTO> orderItems;
+    private Set<ItemDTO> orderItems;
 
     public Long getId() {
         return id;
@@ -61,11 +61,11 @@ public class OrderDTO {
         this.customer = customer;
     }
 
-    public Set<OrderItemDTO> getOrderItems() {
+    public Set<ItemDTO> getOrderItems() {
         return orderItems;
     }
 
-    public void setOrderItems(Set<OrderItemDTO> orderItems) {
+    public void setOrderItems(Set<ItemDTO> orderItems) {
         this.orderItems = orderItems;
     }
 

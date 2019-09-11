@@ -3,7 +3,6 @@ package com.zufar.domain.status;
 import com.zufar.dto.StatusDTO;
 import com.zufar.exception.StatusNotFoundException;
 import com.zufar.service.DaoService;
-import com.zufar.service.UtilService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -80,7 +80,7 @@ public class StatusService implements DaoService<StatusDTO> {
     }
 
     public static StatusDTO convertToStatusDTO(Status status) {
-        UtilService.isObjectNull(status, LOGGER, "There is no status to convert.");
+        Objects.requireNonNull(status, "There is no status to convert.");
         StatusDTO statusDTO = new StatusDTO();
         statusDTO.setId(status.getId());
         statusDTO.setName(status.getName());
@@ -88,7 +88,7 @@ public class StatusService implements DaoService<StatusDTO> {
     }
 
     public static Status convertToStatus(StatusDTO status) {
-        UtilService.isObjectNull(status, LOGGER, "There is no status to convert.");
+        Objects.requireNonNull(status, "There is no status to convert.");
         Status statusEntity = new Status();
         statusEntity.setId(status.getId());
         statusEntity.setName(status.getName());
