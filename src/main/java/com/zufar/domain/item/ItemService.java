@@ -30,6 +30,7 @@ public class ItemService implements DaoService<ItemDTO> {
         this.itemRepository = itemRepository;
     }
 
+    @Override
     public Collection<ItemDTO> getAll() {
         return ((Collection<Item>) this.itemRepository.findAll())
                 .stream()
@@ -45,6 +46,7 @@ public class ItemService implements DaoService<ItemDTO> {
                 .collect(Collectors.toList());
     }
 
+    @Override
     public ItemDTO getById(Long id) {
         Item orderEntity = this.itemRepository.findById(id).orElseThrow(() -> {
             final String errorMessage = "The orderItem with id = " + id + " not found.";
@@ -55,12 +57,14 @@ public class ItemService implements DaoService<ItemDTO> {
         return ItemService.convertToOrderItemDTO(orderEntity);
     }
 
+    @Override
     public ItemDTO save(ItemDTO item) {
         Item itemEntity = ItemService.convertToOrderItem(item);
         itemEntity = this.itemRepository.save(itemEntity);
         return ItemService.convertToOrderItemDTO(itemEntity);
     }
 
+    @Override
     public ItemDTO update(ItemDTO item) {
         this.isExists(item.getId());
         Item itemEntity = ItemService.convertToOrderItem(item);
@@ -68,11 +72,13 @@ public class ItemService implements DaoService<ItemDTO> {
         return ItemService.convertToOrderItemDTO(itemEntity);
     }
 
+    @Override
     public void deleteById(Long id) {
         this.isExists(id);
         this.itemRepository.deleteById(id);
     }
 
+    @Override
     public Boolean isExists(Long id) {
         if (!this.itemRepository.existsById(id)) {
             final String errorMessage = "The orderItem with id = " + id + " not found.";

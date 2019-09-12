@@ -36,6 +36,7 @@ public class OrderService implements DaoService<OrderDTO> {
         this.orderRepository = orderRepository;
     }
 
+    @Override
     public Collection<OrderDTO> getAll() {
         return ((Collection<Order>) this.orderRepository.findAll())
                 .stream()
@@ -43,6 +44,7 @@ public class OrderService implements DaoService<OrderDTO> {
                 .collect(Collectors.toList());
     }
 
+    @Override
     public Collection<OrderDTO> getAll(String sortBy) {
         return ((Collection<Order>) this.orderRepository.findAll(Sort.by(sortBy)))
                 .stream()
@@ -50,6 +52,7 @@ public class OrderService implements DaoService<OrderDTO> {
                 .collect(Collectors.toList());
     }
 
+    @Override
     public OrderDTO getById(Long id) {
         Order statusEntity = this.orderRepository.findById(id).orElseThrow(() -> {
             final String errorMessage = "Getting an order with id=" + id + " is impossible. There is no a sort attribute.";
@@ -60,31 +63,27 @@ public class OrderService implements DaoService<OrderDTO> {
         return OrderService.convertToOrderDTO(statusEntity);
     }
 
+    @Override
     public OrderDTO save(OrderDTO order) {
         Order orderEntity = OrderService.convertToOrder(order);
         orderEntity = this.orderRepository.save(orderEntity);
         return OrderService.convertToOrderDTO(orderEntity);
     }
 
+    @Override
     public OrderDTO update(OrderDTO order) {
         this.isExists(order.getId());
         Order orderEntity = OrderService.convertToOrder(order);
         orderEntity = this.orderRepository.save(orderEntity);
         return OrderService.convertToOrderDTO(orderEntity);
     }
-
-    public OrderDTO updateStatus(StatusDTO status, Long id) {
-        OrderDTO order = this.getById(id);
-        order.setStatus(status);
-        order = this.save(order);
-        return order;
-    }
-
+    @Override
     public void deleteById(Long id) {
         this.isExists(id);
         this.orderRepository.deleteById(id);
     }
 
+    @Override
     public Boolean isExists(Long id) {
         if (!this.orderRepository.existsById(id)) {
             final String errorMessage = "The order with id = " + id + " not found.";
@@ -93,6 +92,13 @@ public class OrderService implements DaoService<OrderDTO> {
             throw orderNotFoundException;
         }
         return true;
+    }
+
+    public OrderDTO updateStatus(StatusDTO status, Long id) {
+        OrderDTO order = this.getById(id);
+        order.setStatus(status);
+        order = this.save(order);
+        return order;
     }
 
     public static OrderDTO convertToOrderDTO(Order order) {

@@ -1,7 +1,6 @@
 package com.zufar.domain.product;
 
 import com.zufar.dto.ProductDTO;
-import com.zufar.dto.StatusDTO;
 import com.zufar.exception.ProductNotFoundException;
 import com.zufar.service.DaoService;
 import org.apache.logging.log4j.LogManager;
@@ -27,6 +26,7 @@ public class ProductService implements DaoService<ProductDTO> {
         this.productRepository = productRepository;
     }
 
+    @Override
     public Collection<ProductDTO> getAll() {
         return  ((Collection<Product>) this.productRepository.findAll())
                 .stream()
@@ -42,6 +42,7 @@ public class ProductService implements DaoService<ProductDTO> {
                 .collect(Collectors.toList());        
     }
 
+    @Override
     public ProductDTO getById(Long id) {
         Product productEntity = this.productRepository.findById(id).orElseThrow(() -> {
             final String errorMessage = "The product with id = " + id + " not found.";
@@ -52,12 +53,14 @@ public class ProductService implements DaoService<ProductDTO> {
         return ProductService.convertToProductDTO(productEntity);
     }
 
+    @Override
     public ProductDTO save(ProductDTO product) {
         Product productEntity = ProductService.convertToProduct(product);
         productEntity = this.productRepository.save(productEntity);
         return ProductService.convertToProductDTO(productEntity);
     }
 
+    @Override
     public ProductDTO update(ProductDTO product) {
         this.isExists(product.getId());
         Product productEntity = ProductService.convertToProduct(product);
@@ -65,11 +68,13 @@ public class ProductService implements DaoService<ProductDTO> {
         return ProductService.convertToProductDTO(productEntity);
     }
 
+    @Override
     public void deleteById(Long id) {
         this.isExists(id);
         this.productRepository.deleteById(id);
     }
 
+    @Override
     public Boolean isExists(Long id) {
         if (!this.productRepository.existsById(id)) {
             final String errorMessage = "The product with id = " + id + " not found.";

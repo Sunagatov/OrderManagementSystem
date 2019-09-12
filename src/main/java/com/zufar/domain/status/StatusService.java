@@ -27,6 +27,7 @@ public class StatusService implements DaoService<StatusDTO> {
         this.statusRepository = statusRepository;
     }
 
+    @Override
     public Collection<StatusDTO> getAll() {
         return ((Collection<Status>) this.statusRepository.findAll())
                 .stream()
@@ -42,6 +43,7 @@ public class StatusService implements DaoService<StatusDTO> {
                 .collect(Collectors.toList());
     }
 
+    @Override
     public StatusDTO getById(Long id) {
         Status statusEntity = this.statusRepository.findById(id).orElseThrow(() -> {
             final String errorMessage = "The status with id = " + id + " not found.";
@@ -51,13 +53,15 @@ public class StatusService implements DaoService<StatusDTO> {
         });
         return StatusService.convertToStatusDTO(statusEntity);
     }
-
+    
+    @Override
     public StatusDTO save(StatusDTO status) {
         Status statusEntity = StatusService.convertToStatus(status);
         statusEntity = this.statusRepository.save(statusEntity);
         return StatusService.convertToStatusDTO(statusEntity);
     }
 
+    @Override
     public StatusDTO update(StatusDTO status) {
         this.isExists(status.getId());
         Status statusEntity = StatusService.convertToStatus(status);
@@ -65,11 +69,13 @@ public class StatusService implements DaoService<StatusDTO> {
         return StatusService.convertToStatusDTO(statusEntity);
     }
 
+    @Override
     public void deleteById(Long id) {
         this.isExists(id);
         this.statusRepository.deleteById(id);
     }
 
+    @Override
     public Boolean isExists(Long id) {
         if (!this.statusRepository.existsById(id)) {
             final String errorMessage = "The status with id = " + id + " not found.";

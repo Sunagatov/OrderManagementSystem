@@ -26,6 +26,7 @@ public class CustomerService implements DaoService<CustomerDTO> {
         this.customerRepository = customerRepository;
     }
 
+    @Override
     public Collection<CustomerDTO> getAll() {
         return ((Collection<Customer>) this.customerRepository.findAll())
                 .stream()
@@ -41,6 +42,7 @@ public class CustomerService implements DaoService<CustomerDTO> {
                 .collect(Collectors.toList());
     }
 
+    @Override
     public CustomerDTO getById(Long id) {
         Customer customerEntity = this.customerRepository.findById(id).orElseThrow(() -> {
             final String errorMessage = "The customer with id = " + id + " not found.";
@@ -51,12 +53,14 @@ public class CustomerService implements DaoService<CustomerDTO> {
         return CustomerService.convertToCustomerDTO(customerEntity);
     }
 
+    @Override
     public CustomerDTO save(CustomerDTO customer) {
         Customer customerEntity = CustomerService.convertToCustomer(customer);
         customerEntity = this.customerRepository.save(customerEntity);
         return CustomerService.convertToCustomerDTO(customerEntity);
     }
 
+    @Override
     public CustomerDTO update(CustomerDTO customer) {
         this.isExists(customer.getId());
         Customer customerEntity = CustomerService.convertToCustomer(customer);
@@ -64,11 +68,13 @@ public class CustomerService implements DaoService<CustomerDTO> {
         return CustomerService.convertToCustomerDTO(customerEntity);
     }
 
+    @Override
     public void deleteById(Long id) {
         this.isExists(id);
         this.customerRepository.deleteById(id);
     }
 
+    @Override
     public Boolean isExists(Long id) {
         if (!this.customerRepository.existsById(id)) {
             final String errorMessage = "The customer with id = " + id + " not found.";
