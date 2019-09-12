@@ -4,7 +4,12 @@ package com.zufar.domain.order;
 import com.zufar.domain.item.Item;
 import com.zufar.domain.status.Status;
 import com.zufar.domain.customer.Customer;
-import lombok.*;
+import lombok.Setter;
+import lombok.Getter;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
