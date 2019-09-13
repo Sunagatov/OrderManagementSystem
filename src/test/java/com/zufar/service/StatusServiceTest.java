@@ -48,50 +48,45 @@ public class StatusServiceTest {
     private final Status COMPLETE_STATUS_ENTITY = new Status(COMPLETE_STATUS_ID, COMPLETE_STATUS_NAME);
     private final StatusDTO COMPLETE_STATUS = new StatusDTO(COMPLETE_STATUS_ID, COMPLETE_STATUS_NAME);
 
-    private final Collection<Status> statuses = new ArrayList<>();
+    private final Collection<Status> STATUSES = new ArrayList<>();
 
 
     @Before
     public void setUp() {
-        statuses.add(ACTIVE_STATUS_ENTITY);
-        statuses.add(COMPLETE_STATUS_ENTITY);
-        statuses.add(IN_PROCESS_STATUS_ENTITY);
-
-        Mockito.when(statusRepository.findById(COMPLETE_STATUS_ID))
-                .thenReturn(Optional.of(COMPLETE_STATUS_ENTITY));
-        Mockito.when(statusRepository.existsById(ACTIVE_STATUS_ID))
-                .thenReturn(true);
-        Mockito.when(statusRepository.existsById(COMPLETE_STATUS_ID))
-                .thenReturn(true);
-        Mockito.when(statusRepository.findAll())
-                .thenReturn(statuses);
+        STATUSES.add(ACTIVE_STATUS_ENTITY);
+        STATUSES.add(COMPLETE_STATUS_ENTITY);
+        STATUSES.add(IN_PROCESS_STATUS_ENTITY);
     }
 
     @Test
     public void whenGetAllCalledThenCollectionShouldBeFound() {
-        Mockito.when(statusRepository.findAll()).thenReturn(statuses);
+        Mockito.when(statusRepository.findAll()).thenReturn(STATUSES);
         Collection<StatusDTO> expected = this.getExampleStatuses();
-        final Collection<StatusDTO> found = this.statusService.getAll();
-        Assert.assertNotNull(found);
-        Assert.assertEquals(expected, found);
+        Collection<StatusDTO> actual = this.statusService.getAll();
+        
+        Assert.assertNotNull(actual);
+        Assert.assertEquals(expected, actual);
     }
 
     @Test
     public void whenGetAllWithSortByCalledThenCollectionShouldBeFound() {
-        String SORT_BY_ATTRIBUTE = "name";
-        Mockito.when(statusRepository.findAll(Sort.by(SORT_BY_ATTRIBUTE))).thenReturn(statuses);
+        final String SORT_BY_ATTRIBUTE = "name";
+        Mockito.when(statusRepository.findAll(Sort.by(SORT_BY_ATTRIBUTE))).thenReturn(STATUSES);
         Collection<StatusDTO> expected = this.getExampleStatuses();
-        final Collection<StatusDTO> found = this.statusService.getAll(SORT_BY_ATTRIBUTE);
-        Assert.assertNotNull(found);
-        Assert.assertEquals(expected, found);
+        Collection<StatusDTO> actual = this.statusService.getAll(SORT_BY_ATTRIBUTE);
+        
+        Assert.assertNotNull(actual);
+        Assert.assertEquals(expected, actual);
     }
 
     @Test
     public void whenValidIdThenStatusShouldBeFound() {
         Mockito.when(statusRepository.findById(ACTIVE_STATUS_ID)).thenReturn(Optional.of(ACTIVE_STATUS_ENTITY));
-        StatusDTO found = statusService.getById(ACTIVE_STATUS_ID);
-        Assert.assertNotNull(found);
-        Assert.assertEquals(ACTIVE_STATUS, found);
+        StatusDTO actual = statusService.getById(ACTIVE_STATUS_ID);
+        StatusDTO expected = getExpectedStatus();
+        
+        Assert.assertNotNull(actual);
+        Assert.assertEquals(expected, actual);
     }
 
     @Test(expected = StatusNotFoundException.class)
@@ -103,29 +98,40 @@ public class StatusServiceTest {
     @Test
     public void whenSaveCalledThenStatusShouldBeReturned() {
         Mockito.when(statusRepository.save(new Status(null, ACTIVE_STATUS_NAME))).thenReturn(ACTIVE_STATUS_ENTITY);
-        StatusDTO found = statusService.save(new StatusDTO(null, ACTIVE_STATUS_NAME));
-        Assert.assertNotNull(found);
-        Assert.assertEquals(ACTIVE_STATUS, found);
+        StatusDTO actual = statusService.save(new StatusDTO(null, ACTIVE_STATUS_NAME));
+        StatusDTO expected = getExpectedStatus();
+
+        Assert.assertNotNull(actual);
+        Assert.assertEquals(expected, actual);
     }
 
     @Test
     public void whenUpdateCalledThenStatusShouldBeReturned() {
         Mockito.when(statusRepository.save(ACTIVE_STATUS_ENTITY)).thenReturn(ACTIVE_STATUS_ENTITY);
-        StatusDTO found = statusService.update(ACTIVE_STATUS);
-        Assert.assertNotNull(found);
-        Assert.assertEquals(ACTIVE_STATUS, found);
+        Mockito.when(statusRepository.existsById(ACTIVE_STATUS_ID)).thenReturn(true);
+        StatusDTO actual = statusService.update(ACTIVE_STATUS);
+        StatusDTO expected = getExpectedStatus();
+
+        Assert.assertNotNull(actual);
+        Assert.assertEquals(expected, actual);
     }
 
     @Test
     public void whenConvertStatusEntityCalledThenStatusDTOShouldBeReturned() {
-        final StatusDTO found = StatusService.convertToStatusDTO(ACTIVE_STATUS_ENTITY);
-        Assert.assertEquals(ACTIVE_STATUS, found);
+        StatusDTO actual = StatusService.convertToStatusDTO(ACTIVE_STATUS_ENTITY);
+        StatusDTO expected = getExpectedStatus();
+
+        Assert.assertNotNull(actual);
+        Assert.assertEquals(expected, actual);
     }
 
     @Test
     public void whenConvertStatusDTOCalledThenStatusEntityShouldBeReturned() {
-        final Status found = StatusService.convertToStatus(ACTIVE_STATUS);
-        Assert.assertEquals(ACTIVE_STATUS_ENTITY, found);
+        Status actual = StatusService.convertToStatus(ACTIVE_STATUS);
+        Status expected = getExpectedStatusEntity();
+
+        Assert.assertNotNull(actual);
+        Assert.assertEquals(expected, actual);
     }
 
     private Collection<StatusDTO> getExampleStatuses() {
@@ -134,5 +140,13 @@ public class StatusServiceTest {
         exampleStatuses.add(COMPLETE_STATUS);
         exampleStatuses.add(IN_PROCESS_STATUS);
         return exampleStatuses;
+    }
+
+    private StatusDTO getExpectedStatus() {
+        return ACTIVE_STATUS;
+    }
+
+    private Status getExpectedStatusEntity() {
+        return ACTIVE_STATUS_ENTITY;
     }
 }
