@@ -1,7 +1,6 @@
 package com.zufar.order;
 
 import com.zufar.status.StatusDTO;
-import com.zufar.service.DaoService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -22,7 +21,7 @@ import java.util.Collection;
 @RequestMapping(value = "orders", produces = {MediaType.APPLICATION_JSON_VALUE})
 public class OrderController {
 
-    private final DaoService<OrderDTO> orderService;
+    private final OrderService orderService;
 
     @Autowired
     public OrderController(OrderService orderService) {
@@ -65,10 +64,6 @@ public class OrderController {
     @PutMapping(value = "/{orderId}")
     public @ResponseBody
     OrderDTO changeOrderStatus(@RequestBody StatusDTO status, @RequestParam Long orderId) {
-        OrderService service = (orderService instanceof OrderService ? (OrderService) orderService : null);
-        if (service == null) {
-            throw new ClassCastException("Getting orderService is impossible.");
-        }
-        return service.updateStatus(status, orderId);
+        return orderService.updateStatus(status, orderId);
     }
 }
