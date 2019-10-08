@@ -7,13 +7,23 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
+import javax.persistence.OneToMany;
+import javax.persistence.JoinTable;
+import javax.persistence.JoinColumn;
+import javax.persistence.FetchType;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Column;
+import javax.persistence.CascadeType;
 import javax.persistence.GenerationType;
+
+import java.util.Set;
 
 @Entity
 @Getter
@@ -41,6 +51,13 @@ public class User {
 
     @Column(name = "password", length = 256, nullable = false)
     private String password;
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
+    @Fetch(FetchMode.JOIN)
+    @JoinTable(name = "user_roles",
+            joinColumns = {@JoinColumn(name = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "role_id")})
+    private Set<Role> roles;
 }
 
 

@@ -104,7 +104,8 @@ public class UserService implements DaoService<UserDTO> {
                 user.getName(),
                 user.getEmail(),
                 user.getLogin(),
-                user.getPassword());
+                user.getPassword(),
+                user.getRoles());
     }
 
     public static UserDTO convertToUserDTO(User user) {
@@ -114,6 +115,7 @@ public class UserService implements DaoService<UserDTO> {
                 user.getName(),
                 user.getEmail(),
                 user.getLogin(),
-                user.getPassword());
+                user.getPassword(),
+                user.getRoles());
     }
 }

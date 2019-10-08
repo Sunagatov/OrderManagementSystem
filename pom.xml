@@ -60,7 +60,11 @@
             <scope>provided</scope>
             <version>${spring.framework.boot-starter.version}</version>
         </dependency>
-        
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+            <version>${spring.framework.boot-starter.version}</version>
+        </dependency>
         <!--                                             Database dependencies                                       -->
         <dependency>
             <groupId>org.postgresql</groupId>

@@ -7,6 +7,8 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.util.Set;
+
 @Getter
 @Setter
 @EqualsAndHashCode
@@ -20,4 +22,5 @@ public class UserDTO {
     private String email;
     private String login;
     private String password;
+    private Set<Role> roles;
 }
