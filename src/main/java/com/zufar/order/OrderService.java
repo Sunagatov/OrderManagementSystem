@@ -105,7 +105,7 @@ public class OrderService implements DaoService<OrderDTO> {
     public static OrderDTO convertToOrderDTO(Order order) {
         Objects.requireNonNull(order, "There is no order to convert.");
         final StatusDTO status = StatusService.convertToStatusDTO(order.getStatus());
-        final UserDTO customer = UserService.convertToUserDTO(order.getUser());
+        final UserDTO user = UserService.convertToUserDTO(order.getUser());
         final Set<ItemDTO> items = order.getItems()
                 .stream()
                 .map(ItemService::convertToOrderItemDTO)
@@ -116,7 +116,7 @@ public class OrderService implements DaoService<OrderDTO> {
                 order.getCreationDate(),
                 order.getLastModifiedDate(),
                 status,
-                customer,
+                user,
                 items
         );
     }
@@ -135,7 +135,7 @@ public class OrderService implements DaoService<OrderDTO> {
                 .map(ItemService::convertToOrderItem)
                 .collect(Collectors.toSet());
         final Status status = StatusService.convertToStatus(order.getStatus());
-        final User user = UserService.convertToUser(order.getCustomer());
+        final User user = UserService.convertToUser(order.getUser());
         return new Order(
                 order.getId(),
                 order.getTitle(),

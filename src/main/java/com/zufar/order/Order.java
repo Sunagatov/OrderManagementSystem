@@ -62,7 +62,7 @@ public class Order {
 
     @OneToOne(fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.JOIN)
-    @JoinColumn(name = "customer_id")
+    @JoinColumn(name = "user_id")
     private User user;
 
 
