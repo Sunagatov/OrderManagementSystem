@@ -20,39 +20,39 @@ import org.springframework.web.bind.annotation.PutMapping;
 @RequestMapping(value = "users", produces = {MediaType.APPLICATION_JSON_VALUE})
 public class UserController {
 
-    private final DaoService<UserDTO> customerService;
+    private final DaoService<UserDTO> userService;
 
     @Autowired
     public UserController(UserService userService) {
-        this.customerService = userService;
+        this.userService = userService;
     }
 
     @GetMapping
     public @ResponseBody
-    Collection<UserDTO> getCustomers() {
-        return this.customerService.getAll();
+    Collection<UserDTO> getUsers() {
+        return this.userService.getAll();
     }
 
     @GetMapping(value = "/{id}")
     public @ResponseBody
-    UserDTO getCustomer(@PathVariable Long id) {
-        return this.customerService.getById(id);
+    UserDTO getUser(@PathVariable Long id) {
+        return this.userService.getById(id);
     }
 
     @DeleteMapping(value = "/{id}")
-    public void deleteCustomer(@PathVariable Long id) {
-        this.customerService.deleteById(id);
+    public void deleteUser(@PathVariable Long id) {
+        this.userService.deleteById(id);
     }
 
     @PostMapping
     public @ResponseBody
-    UserDTO saveCustomer(@RequestBody UserDTO customer) {
-        return this.customerService.save(customer);
+    UserDTO saveUser(@RequestBody UserDTO user) {
+        return this.userService.save(user);
     }
 
     @PutMapping
     public @ResponseBody
-    UserDTO updateCustomer(@RequestBody UserDTO customer) {
-        return this.customerService.update(customer);
+    UserDTO updateUser(@RequestBody UserDTO user) {
+        return this.userService.update(user);
     }
 }
